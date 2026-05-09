@@ -26,7 +26,7 @@ function downloadYtdlp() {
     console.log('⬇️  Downloading yt-dlp binary...');
     const file = fs.createWriteStream(YTDLP_PATH);
     https.get(
-      'https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp',
+      'https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux',
       { headers: { 'User-Agent': 'copasave' } },
       (res) => {
         if (res.statusCode === 302 || res.statusCode === 301) {
