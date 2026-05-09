@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Copasave — Download Videos Instantly</title>
+<meta name="description" content="Copy. Paste. Save. Download videos from TikTok, Instagram, Facebook, Pinterest and more in seconds." />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --night: #07090f;
+    --night-2: #0d1120;
+    --night-3: #111827;
+    --surface: #141c2e;
+    --surface-2: #1a2540;
+    --border: rgba(255,255,255,0.07);
+    --border-hover: rgba(255,255,255,0.14);
+    --accent: #4f8ef7;
+    --accent-dim: rgba(79,142,247,0.12);
+    --accent-glow: rgba(79,142,247,0.25);
+    --teal: #2de8c8;
+    --teal-dim: rgba(45,232,200,0.1);
+    --muted: rgba(255,255,255,0.45);
+    --text: rgba(255,255,255,0.93);
+    --text-2: rgba(255,255,255,0.65);
+    --text-3: rgba(255,255,255,0.38);
+    --radius: 14px;
+    --radius-lg: 22px;
+    --radius-xl: 32px;
+    --font-display: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--night);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── STAR CANVAS ── */
+  #starfield {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NEBULA GLOW ── */
+  .nebula {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.18;
+  }
+  .nebula-1 { width: 600px; height: 600px; background: #1a3a8f; top: -200px; left: -150px; }
+  .nebula-2 { width: 500px; height: 500px; background: #0d6e6e; top: 40%; right: -200px; }
+  .nebula-3 { width: 400px; height: 400px; background: #1a3a8f; bottom: 0; left: 30%; }
+
+  /* ── LAYOUT ── */
+  .wrapper { position: relative; z-index: 1; }
+
+  /* ── NAV ── */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    background: rgba(7,9,15,0.7);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.3rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .logo-dot { color: var(--accent); }
+  .logo-icon {
+    width: 32px; height: 32px;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-glow);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-icon svg { width: 16px; height: 16px; color: var(--accent); }
+
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    color: var(--text-2);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 400;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1.1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .nav-cta:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 6rem 1.5rem 4rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-glow);
+    border-radius: 100px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.8rem;
+    color: var(--accent);
+    margin-bottom: 2rem;
+    font-weight: 500;
+  }
+  .badge-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 4.2rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.25rem;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+    position: relative;
+  }
+  .hero h1 em::after {
+    content: '';
+    position: absolute;
+    bottom: 2px; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    opacity: 0.4;
+    border-radius: 2px;
+  }
+
+  .hero-sub {
+    color: var(--text-2);
+    font-size: 1.1rem;
+    font-weight: 300;
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+  }
+
+  /* ── MAIN INPUT CARD ── */
+  .input-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 2rem;
+    max-width: 680px;
+    margin: 0 auto 2rem;
+    backdrop-filter: blur(12px);
+    transition: border-color 0.3s;
+  }
+  .input-card:focus-within { border-color: var(--accent-glow); }
+
+  .url-row {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .url-input {
+    flex: 1;
+    min-width: 0;
+    background: var(--night-3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.85rem 1.1rem;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    min-width: 200px;
+  }
+  .url-input::placeholder { color: var(--text-3); }
+  .url-input:focus {
+    border-color: var(--accent);
+    background: var(--surface-2);
+  }
+
+  .paste-btn {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0 1rem;
+    color: var(--text-2);
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .paste-btn:hover { border-color: var(--border-hover); color: var(--text); }
+  .paste-btn svg { width: 15px; height: 15px; }
+
+  /* format row */
+  .format-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .format-label {
+    font-size: 0.8rem;
+    color: var(--text-3);
+    margin-right: 0.25rem;
+  }
+  .fmt-chip {
+    background: var(--night-3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: var(--font-body);
+  }
+  .fmt-chip:hover { border-color: var(--border-hover); color: var(--text); }
+  .fmt-chip.active {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .download-btn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--accent);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    letter-spacing: 0.01em;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .download-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.4s;
+  }
+  .download-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 32px var(--accent-glow); }
+  .download-btn:hover::before { transform: translateX(100%); }
+  .download-btn:active { transform: translateY(0); }
+  .download-btn svg { width: 20px; height: 20px; }
+
+  /* ── LOADING STATE ── */
+  .loader {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .loader.show { display: flex; }
+  .spinner {
+    width: 40px; height: 40px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loader-text { color: var(--text-2); font-size: 0.9rem; }
+  .loader-sub { color: var(--text-3); font-size: 0.8rem; }
+
+  /* ── RESULT CARD ── */
+  .result-card {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    max-width: 680px;
+    margin: 0 auto 2rem;
+    gap: 1.25rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .result-card.show { display: flex; animation: fadeUp 0.3s ease; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .result-thumb {
+    width: 90px; height: 90px;
+    border-radius: 10px;
+    background: var(--surface-2);
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .result-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .result-thumb-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-3);
+  }
+  .result-thumb-placeholder svg { width: 32px; height: 32px; }
+
+  .result-info { flex: 1; min-width: 200px; }
+  .result-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .result-meta {
+    font-size: 0.8rem;
+    color: var(--text-3);
+    display: flex; gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+  .result-meta span { display: flex; align-items: center; gap: 0.25rem; }
+  .result-meta svg { width: 13px; height: 13px; }
+
+  .download-options { display: flex; flex-direction: column; gap: 0.5rem; }
+  .dl-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--night-3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.6rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .dl-option:hover { border-color: var(--accent-glow); background: var(--surface-2); }
+  .dl-option-info { display: flex; align-items: center; gap: 0.6rem; }
+  .dl-option-badge {
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-glow);
+    color: var(--accent);
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 0.15rem 0.45rem;
+    font-family: var(--font-display);
+    letter-spacing: 0.03em;
+  }
+  .dl-option-label { font-size: 0.85rem; color: var(--text-2); }
+  .dl-btn-small {
+    background: var(--accent);
+    border: none;
+    border-radius: 7px;
+    padding: 0.35rem 0.75rem;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 0.35rem;
+    font-family: var(--font-body);
+    transition: opacity 0.2s;
+  }
+  .dl-btn-small:hover { opacity: 0.85; }
+  .dl-btn-small svg { width: 13px; height: 13px; }
+
+  /* ── SUPPORTED PLATFORMS ── */
+  .platforms-section {
+    text-align: center;
+    padding: 1rem 1.5rem 3rem;
+  }
+  .platforms-label { font-size: 0.8rem; color: var(--text-3); margin-bottom: 1.25rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  .platforms-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .platform-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 0.4rem 1rem;
+    font-size: 0.85rem;
+    color: var(--text-2);
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .platform-pill:hover { border-color: var(--border-hover); color: var(--text); transform: translateY(-2px); }
+  .platform-icon { width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+  .platform-icon svg { width: 14px; height: 14px; }
+  .pi-tiktok { background: #000; color: #fff; }
+  .pi-ig { background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045); color: #fff; }
+  .pi-fb { background: #1877f2; color: #fff; }
+  .pi-pin { background: #e60023; color: #fff; }
+  .pi-yt { background: #ff0000; color: #fff; }
+  .pi-tw { background: #000; color: #fff; }
+
+  /* ── HOW IT WORKS ── */
+  .steps-section {
+    padding: 5rem 1.5rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .section-header { text-align: center; margin-bottom: 3.5rem; }
+  .section-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--teal);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+  .section-sub {
+    color: var(--text-2);
+    font-size: 1rem;
+    margin-top: 0.75rem;
+    font-weight: 300;
+  }
+
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+  .step-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .step-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--accent-dim) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .step-card:hover { border-color: var(--border-hover); transform: translateY(-3px); }
+  .step-card:hover::before { opacity: 1; }
+
+  .step-num {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--accent);
+    opacity: 0.12;
+    position: absolute;
+    top: 0.5rem; right: 1rem;
+    line-height: 1;
+  }
+  .step-icon {
+    width: 44px; height: 44px;
+    background: var(--accent-dim);
+    border: 1px solid var(--accent-glow);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1.1rem;
+    position: relative;
+  }
+  .step-icon svg { width: 20px; height: 20px; color: var(--accent); }
+  .step-h {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .step-p { font-size: 0.9rem; color: var(--text-2); line-height: 1.6; font-weight: 300; }
+
+  /* ── FEATURES ── */
+  .features-section {
+    padding: 5rem 1.5rem;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .feature-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    display: flex; gap: 1rem;
+    align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+  .feature-item:hover { border-color: var(--border-hover); }
+  .fi-icon {
+    width: 38px; height: 38px; flex-shrink: 0;
+    background: var(--teal-dim);
+    border: 1px solid rgba(45,232,200,0.2);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .fi-icon svg { width: 18px; height: 18px; color: var(--teal); }
+  .fi-h { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.35rem; }
+  .fi-p { font-size: 0.85rem; color: var(--text-2); line-height: 1.55; font-weight: 300; }
+
+  /* ── FAQ ── */
+  .faq-section {
+    padding: 5rem 1.5rem;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+  .faq-q {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 1.25rem 0;
+    font-family: var(--font-body);
+    font-size: 0.975rem;
+    font-weight: 500;
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .faq-arrow {
+    width: 20px; height: 20px; flex-shrink: 0;
+    color: var(--text-3);
+    transition: transform 0.25s;
+  }
+  .faq-item.open .faq-arrow { transform: rotate(180deg); color: var(--accent); }
+  .faq-a {
+    display: none;
+    font-size: 0.9rem;
+    color: var(--text-2);
+    line-height: 1.7;
+    padding-bottom: 1.25rem;
+    font-weight: 300;
+  }
+  .faq-item.open .faq-a { display: block; animation: fadeUp 0.2s ease; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    color: var(--text);
+  }
+  .footer-logo span { color: var(--accent); }
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.75rem;
+    list-style: none;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .footer-links a {
+    font-size: 0.85rem;
+    color: var(--text-3);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--text-2); }
+  .footer-copy { font-size: 0.8rem; color: var(--text-3); }
+
+  /* ── ERROR ── */
+  .error-msg {
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(220,60,60,0.1);
+    border: 1px solid rgba(220,60,60,0.25);
+    border-radius: 9px;
+    padding: 0.65rem 1rem;
+    font-size: 0.875rem;
+    color: #f87171;
+    margin-top: 0.75rem;
+  }
+  .error-msg.show { display: flex; animation: fadeUp 0.2s ease; }
+  .error-msg svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--surface-2);
+    border: 1px solid var(--border-hover);
+    border-radius: 100px;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.875rem;
+    color: var(--text);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s;
+    z-index: 9999;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    nav { padding: 1rem; }
+    .nav-links { display: none; }
+    .hero { padding: 3.5rem 1rem 2.5rem; }
+    .input-card { padding: 1.25rem; border-radius: var(--radius-lg); }
+    .url-row { flex-direction: column; }
+    .paste-btn { width: 100%; justify-content: center; padding: 0.7rem 1rem; }
+    .result-card { flex-direction: column; }
+    .result-thumb { width: 100%; height: 160px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+
+<div class="wrapper">
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 12l-4-4m4 4l4-4"/><path d="M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17"/></svg>
+      </div>
+      Copa<span class="logo-dot">save</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <button class="nav-cta" onclick="document.querySelector('.url-input').focus()">Try it free</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      No account needed · 100% free
+    </div>
+    <h1>Copy. Paste. <em>Save.</em><br/>Videos in seconds.</h1>
+    <p class="hero-sub">Download videos from TikTok, Instagram, Facebook, Pinterest and more — pick your format, get your file instantly.</p>
+  </section>
+
+  <!-- INPUT CARD -->
+  <div class="input-card" id="inputCard">
+    <div class="url-row">
+      <input class="url-input" id="urlInput" type="url" placeholder="Paste video link here…" autocomplete="off" spellcheck="false" />
+      <button class="paste-btn" id="pasteBtn" onclick="pasteFromClipboard()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="10" height="4" rx="1"/><path d="M9 2H7a2 2 0 00-2 2v16a2 2 0 002 2h10a2 2 0 002-2V8"/><path d="M13 15H9m4-4H9"/></svg>
+        Paste
+      </button>
+    </div>
+
+    <div class="format-row">
+      <span class="format-label">Format:</span>
+      <button class="fmt-chip active" onclick="selectFormat(this, 'mp4-hd')">MP4 HD</button>
+      <button class="fmt-chip" onclick="selectFormat(this, 'mp4-sd')">MP4 SD</button>
+      <button class="fmt-chip" onclick="selectFormat(this, 'mp3')">MP3 Audio</button>
+      <button class="fmt-chip" onclick="selectFormat(this, 'no-wm')">No Watermark</button>
+    </div>
+
+    <button class="download-btn" onclick="handleDownload()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 12l-4-4m4 4l4-4"/><path d="M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17"/></svg>
+      Fetch &amp; Download
+    </button>
+
+    <div class="error-msg" id="errorMsg">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="errorText">Please paste a valid video URL.</span>
+    </div>
+  </div>
+
+  <!-- LOADER -->
+  <div class="loader" id="loader">
+    <div class="spinner"></div>
+    <p class="loader-text">Fetching your video…</p>
+    <p class="loader-sub">This usually takes 2–5 seconds</p>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-card" id="resultCard">
+    <div class="result-thumb" id="resultThumb">
+      <div class="result-thumb-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      </div>
+    </div>
+    <div class="result-info">
+      <div class="result-title" id="resultTitle">Video Title</div>
+      <div class="result-meta" id="resultMeta">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span id="resultDuration">–</span></span>
+        <span id="resultPlatform">–</span>
+      </div>
+      <div class="download-options" id="downloadOptions"></div>
+    </div>
+  </div>
+
+  <!-- PLATFORMS -->
+  <div class="platforms-section">
+    <p class="platforms-label">Supported platforms</p>
+    <div class="platforms-row">
+      <div class="platform-pill">
+        <div class="platform-icon pi-tiktok">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9.41a8.16 8.16 0 004.77 1.52V7.48a4.85 4.85 0 01-1-.79z"/></svg>
+        </div>
+        TikTok
+      </div>
+      <div class="platform-pill">
+        <div class="platform-icon pi-ig">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </div>
+        Instagram
+      </div>
+      <div class="platform-pill">
+        <div class="platform-icon pi-fb">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </div>
+        Facebook
+      </div>
+      <div class="platform-pill">
+        <div class="platform-icon pi-pin">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.003 12.017.003z"/></svg>
+        </div>
+        Pinterest
+      </div>
+      <div class="platform-pill">
+        <div class="platform-icon pi-yt">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+        </div>
+        YouTube
+      </div>
+      <div class="platform-pill">
+        <div class="platform-icon pi-tw">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </div>
+        X / Twitter
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section class="steps-section" id="how">
+    <div class="section-header">
+      <div class="section-tag">How it works</div>
+      <h2 class="section-title">Three steps, done.</h2>
+      <p class="section-sub">No apps, no sign-ups, no waiting. Just paste and go.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <span class="step-num">01</span>
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 17l4 4 4-4m-4-5v9"/><path d="M20.88 18.09A5 5 0 0018 9h-1.26A8 8 0 103 16.29"/></svg>
+        </div>
+        <div class="step-h">Copy the link</div>
+        <p class="step-p">Find any video on TikTok, Instagram, Facebook, Pinterest, or other supported platforms and copy its URL from the address bar or share menu.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">02</span>
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="10" height="4" rx="1"/><path d="M9 2H7a2 2 0 00-2 2v16a2 2 0 002 2h10a2 2 0 002-2V8"/><path d="M13 15H9m4-4H9"/></svg>
+        </div>
+        <div class="step-h">Paste &amp; choose format</div>
+        <p class="step-p">Drop the URL into the box above. Pick your preferred format — HD video, standard quality, audio-only MP3, or watermark-free version.</p>
+      </div>
+      <div class="step-card">
+        <span class="step-num">03</span>
+        <div class="step-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 12l-4-4m4 4l4-4"/><path d="M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17"/></svg>
+        </div>
+        <div class="step-h">Save to device</div>
+        <p class="step-p">Hit download and the file lands straight on your device. Works on desktop and mobile without any app installation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features-section" id="features">
+    <div class="section-header">
+      <div class="section-tag">Features</div>
+      <h2 class="section-title">Built for speed &amp; simplicity</h2>
+      <p class="section-sub">Everything you need, nothing you don't.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="fi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <div>
+          <div class="fi-h">Lightning fast</div>
+          <p class="fi-p">Most downloads complete in under 5 seconds. Our servers are optimized for speed, not storage.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+        <div>
+          <div class="fi-h">Mobile-first design</div>
+          <p class="fi-p">Fully responsive and optimized for phones. Paste from your clipboard and download — all without leaving the browser.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+          <div class="fi-h">No sign-up required</div>
+          <p class="fi-p">We don't ask for your email or create accounts. Just use the tool and go — your privacy stays yours.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        </div>
+        <div>
+          <div class="fi-h">Multiple formats</div>
+          <p class="fi-p">Choose HD or SD video, extract audio as MP3, or download without watermarks where available.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        </div>
+        <div>
+          <div class="fi-h">6+ platforms supported</div>
+          <p class="fi-p">TikTok, Instagram, Facebook, Pinterest, YouTube, Twitter/X and more. All from one link box.</p>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="fi-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+        </div>
+        <div>
+          <div class="fi-h">No watermarks added</div>
+          <p class="fi-p">We don't add our own watermarks to your downloads. Where the platform allows, you can also strip existing ones.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section" id="faq">
+    <div class="section-header">
+      <div class="section-tag">FAQ</div>
+      <h2 class="section-title">Common questions</h2>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Is Copasave free to use?
+        <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a">Yes — Copasave is completely free with no hidden fees, subscriptions, or download limits.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Do I need to create an account?
+        <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a">No account is needed. Just paste the link and download — we don't collect personal information or require registration.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Which video platforms are supported?
+        <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a">Currently supported: TikTok, Instagram (Reels, Stories, Posts), Facebook, Pinterest, YouTube, and X/Twitter. We're regularly adding more platforms.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Can I download private videos?
+        <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a">No. Copasave only works with publicly accessible videos out of respect for creators' privacy settings and platform policies.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        What formats can I download?
+        <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a">You can download as MP4 in HD (1080p) or SD (480p), extract audio as MP3, or get a no-watermark version where the platform allows it.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Is it legal to download videos?
+        <svg class="faq-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="faq-a">Downloading videos for personal offline viewing is generally accepted, but redistributing or repurposing content without permission may infringe on copyright. Always respect creators' rights.</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Copa<span>save</span></div>
+    <ul class="footer-links">
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Terms of Use</a></li>
+      <li><a href="#">Contact</a></li>
+      <li><a href="#">Blog</a></li>
+    </ul>
+    <p class="footer-copy">© 2025 Copasave. All rights reserved. For personal use only.</p>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── STARFIELD ── */
+(function() {
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  let W, H;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+
+  function initStars() {
+    stars = [];
+    const count = Math.floor((W * H) / 4200);
+    for (let i = 0; i < count; i++) {
+      const r = Math.random();
+      stars.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: r < 0.7 ? 0.4 : r < 0.9 ? 0.75 : 1.1,
+        alpha: 0.2 + Math.random() * 0.7,
+        speed: 0.0003 + Math.random() * 0.0008,
+        offset: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  let t = 0;
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    t += 0.015;
+    for (const s of stars) {
+      const a = s.alpha * (0.6 + 0.4 * Math.sin(t * s.speed * 1000 + s.offset));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${a})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  initStars();
+  draw();
+  window.addEventListener('resize', () => { resize(); initStars(); });
+})();
+
+/* ── FORMAT SELECT ── */
+let selectedFormat = 'mp4-hd';
+function selectFormat(btn, fmt) {
+  document.querySelectorAll('.fmt-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedFormat = fmt;
+}
+
+/* ── PASTE ── */
+async function pasteFromClipboard() {
+  try {
+    const text = await navigator.clipboard.readText();
+    document.getElementById('urlInput').value = text;
+    showToast('Pasted from clipboard ✓');
+  } catch {
+    document.getElementById('urlInput').focus();
+    document.execCommand('paste');
+  }
+}
+
+/* ── TOAST ── */
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ── ERROR ── */
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  document.getElementById('errorText').textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 4000);
+}
+
+/* ── DETECT PLATFORM ── */
+function detectPlatform(url) {
+  if (/tiktok\.com/.test(url)) return { name: 'TikTok', color: '#fff', bg: '#000' };
+  if (/instagram\.com/.test(url)) return { name: 'Instagram', color: '#fff', bg: '#c13584' };
+  if (/facebook\.com|fb\.watch/.test(url)) return { name: 'Facebook', color: '#fff', bg: '#1877f2' };
+  if (/pinterest\.com|pin\.it/.test(url)) return { name: 'Pinterest', color: '#fff', bg: '#e60023' };
+  if (/youtube\.com|youtu\.be/.test(url)) return { name: 'YouTube', color: '#fff', bg: '#ff0000' };
+  if (/twitter\.com|x\.com/.test(url)) return { name: 'X / Twitter', color: '#fff', bg: '#000' };
+  return null;
+}
+
+/* ── API CONFIG ── */
+// When frontend is served by the Express backend (same origin), use relative URLs.
+// If running the HTML separately during dev, set this to 'http://localhost:3001'.
+const API_BASE = '';
+
+/* ── STATE ── */
+let currentVideoUrl = '';   // URL of the last successfully fetched video
+let currentFormats  = [];   // formats returned by /api/fetch
+
+/* ── DOWNLOAD HANDLER ── */
+async function handleDownload() {
+  const input = document.getElementById('urlInput');
+  const url   = input.value.trim();
+
+  document.getElementById('errorMsg').classList.remove('show');
+  document.getElementById('resultCard').classList.remove('show');
+
+  if (!url) { showError('Please paste a video URL first.'); return; }
+
+  let isValidUrl = false;
+  try { new URL(url); isValidUrl = true; } catch {}
+  if (!isValidUrl) {
+    showError("That doesn't look like a valid URL. Please check and try again.");
+    return;
+  }
+
+  const platform = detectPlatform(url);
+  if (!platform) {
+    showError('Platform not supported yet. Try TikTok, Instagram, Facebook, Pinterest, YouTube, or X.');
+    return;
+  }
+
+  // Show loader
+  document.getElementById('inputCard').style.display = 'none';
+  const loader = document.getElementById('loader');
+  loader.classList.add('show');
+
+  try {
+    const resp = await fetch(`${API_BASE}/api/fetch`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ url }),
+    });
+    const data = await resp.json();
+
+    if (!resp.ok) throw new Error(data.error || 'Could not fetch video info.');
+
+    currentVideoUrl = url;
+    currentFormats  = data.formats;
+
+    loader.classList.remove('show');
+    document.getElementById('inputCard').style.display = '';
+    showResult(data, platform);
+
+  } catch (err) {
+    loader.classList.remove('show');
+    document.getElementById('inputCard').style.display = '';
+    showError(err.message || 'Something went wrong. Please try again.');
+  }
+}
+
+/* ── SHOW RESULT ── */
+function showResult(data, platform) {
+  document.getElementById('resultTitle').textContent    = data.title    || 'Untitled video';
+  document.getElementById('resultDuration').textContent = data.duration || '—';
+  document.getElementById('resultPlatform').innerHTML   =
+    `<span style="background:${platform.bg};color:${platform.color};font-size:0.72rem;padding:0.15rem 0.55rem;border-radius:4px;font-weight:600;">${platform.name}</span>`;
+
+  // Show thumbnail if available
+  if (data.thumbnail) {
+    let thumb = document.getElementById('resultThumb');
+    if (!thumb) {
+      thumb = document.createElement('img');
+      thumb.id = 'resultThumb';
+      thumb.style.cssText = 'width:100%;max-height:200px;object-fit:cover;border-radius:10px;margin-bottom:1rem;';
+      document.getElementById('resultCard').querySelector('.result-meta')?.before(thumb)
+        || document.getElementById('downloadOptions').before(thumb);
+    }
+    thumb.src = data.thumbnail;
+    thumb.alt = data.title;
+  }
+
+  // Build download buttons from real format list
+  const opts = document.getElementById('downloadOptions');
+  opts.innerHTML = '';
+
+  // Filter formats by user-selected format chip
+  let formats = data.formats;
+  if (selectedFormat === 'mp3')   formats = formats.filter(f => f.id === 'mp3');
+  if (selectedFormat === 'mp4-sd') formats = formats.filter(f => f.id === 'mp4-sd');
+  if (selectedFormat === 'no-wm') formats = formats.filter(f => f.id !== 'mp3');
+  if (!formats.length) formats = data.formats; // fallback to all
+
+  formats.forEach(f => {
+    const div = document.createElement('div');
+    div.className = 'dl-option';
+    div.innerHTML = `
+      <div class="dl-option-info">
+        <span class="dl-option-badge">${f.badge}</span>
+        <span class="dl-option-label">${f.label}</span>
+      </div>
+      <button class="dl-btn-small" onclick="triggerDownload('${f.id}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3m0 12l-4-4m4 4l4-4"/><path d="M2 17l.621 2.485A2 2 0 004.561 21h14.878a2 2 0 001.94-1.515L22 17"/></svg>
+        Save
+      </button>`;
+    opts.appendChild(div);
+  });
+
+  document.getElementById('resultCard').classList.add('show');
+  document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ── TRIGGER DOWNLOAD ── */
+function triggerDownload(formatId) {
+  if (!currentVideoUrl) { showError('No video loaded.'); return; }
+  showToast('Starting download…');
+
+  // Build the download URL — the browser will follow it and receive the file
+  const dlUrl = `${API_BASE}/api/download?` + new URLSearchParams({
+    url:    currentVideoUrl,
+    format: formatId,
+  });
+
+  // Use a hidden anchor so the browser handles the file save dialog
+  const a    = document.createElement('a');
+  a.href     = dlUrl;
+  a.download = '';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  setTimeout(() => showToast('Download started ↓'), 800);
+}
+
+/* ── FAQ ── */
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+/* ── INPUT ENTER KEY ── */
+document.getElementById('urlInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') handleDownload();
+});
+</script>
+</body>
+</html>
