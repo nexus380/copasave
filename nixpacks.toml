@@ -1,2 +1,5 @@
 [phases.setup]
-nixPkgs = ["ffmpeg", "yt-dlp"]
+nixPkgs = ["ffmpeg", "python312", "yt-dlp"]
+
+[start]
+cmd = "npm start"
