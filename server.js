@@ -22,6 +22,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 function getYtdlpCmd() {
   const candidates = [
     process.env.YTDLP_PATH,
+    path.join(__dirname, 'yt-dlp'),
+    './yt-dlp',
     'yt-dlp',
     `${process.env.HOME}/.local/bin/yt-dlp`,
     '/usr/local/bin/yt-dlp',
